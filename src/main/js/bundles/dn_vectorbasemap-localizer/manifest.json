@@ -1,6 +1,6 @@
 {
     "name": "dn_vectorbasemap-localizer",
-    "version": "1.0.0",
+    "version": "1.0.1-SNAPSHOT",
     "title": "Vector Basemap Localizor",
     "description": "This bundle changes the localization of vector tile layers to the currently selected locale.",
     "vendor": "con terra GmbH",
