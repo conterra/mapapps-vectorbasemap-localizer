@@ -7,7 +7,7 @@
     "icon": {},
     "licenses": {},
     "dependencies": {
-        "map-basemaps-api": "^4.14.0"
+        "map-basemaps-api": "^4.7.0"
     },
     "productName": "devnet-mapapps-vectorbasemap-localizer",
     "components": [
