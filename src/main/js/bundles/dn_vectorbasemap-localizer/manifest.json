@@ -6,6 +6,8 @@
     "vendor": "con terra GmbH",
     "icon": {},
     "licenses": {},
+    "main": "",
+    "i18n": [],
     "dependencies": {
         "map-basemaps-api": "^4.7.0"
     },
