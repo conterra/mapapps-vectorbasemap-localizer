@@ -1,0 +1,45 @@
+{
+    "name": "dn_vectorbasemap-localizer",
+    "version": "1.0.1-SNAPSHOT",
+    "title": "Vector Basemap Localizor",
+    "description": "This bundle changes the localization of vector tile layers to the currently selected locale.",
+    "vendor": "con terra GmbH",
+    "icon": {},
+    "licenses": [{}],
+    "main": "main",
+    "layer": "module",
+    "i18n": ["bundle"],
+    "dependencies": {},
+    "components": [
+        {
+            "name": "VectorBasemapLocalizorController",
+            "impl": "./VectorBasemapLocalizorController",
+            "provides": "dn_vectorBasemapLocalizor.VectorBasemapLocalizorController",
+            "propertiesConstructor": true,
+            "immediate": true,
+            "properties": {
+                "supportedLocale": ["en", "de"],
+                "fallbackLocale": "en",
+                "localizableLayoutProperties": [
+                    {
+                        "key": "text-field",
+                        "values": [
+                            "{_name_global}",
+                            "{_name}",
+                            "{_name_en}",
+                            "{_name_de}"
+                        ],
+                        "replacingValue": "{_name_{locale}}"
+                    }
+                ],
+                "waitAfterLayerviewCreateInMS": 1500
+            },
+            "references": [
+                {
+                    "name": "basemapsModel",
+                    "providing": "map-basemaps-api.BasemapsModel"
+                }
+            ]
+        }
+    ]
+}

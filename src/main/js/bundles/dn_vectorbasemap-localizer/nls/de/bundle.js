@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 module.exports = {
-    bundleName: "Hallo Welt",
-    bundleDescription: "Das Modul gibt Hallo aus.",
-    hello: "Hallo Welt"
+    ui: {
+    }
 };
