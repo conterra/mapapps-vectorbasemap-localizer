@@ -2,6 +2,10 @@
 
 This bundle changes the localization of vector tile layers to the currently selected locale.
 
+## Constraints
+
+The bundle only works for vector tile layers that are added with a url property (not for esri wkid layers such as 'topo-vector').
+
 ## Sample App
 https://demos.conterra.de/mapapps/resources/apps/downloads_vectorbasemaplocalizer/index.html
 
