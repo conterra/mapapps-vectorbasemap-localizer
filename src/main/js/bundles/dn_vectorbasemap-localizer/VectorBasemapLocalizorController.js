@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 import declare from "dojo/_base/declare";
-import {watch} from "esri/core/watchUtils";
+import * as reactiveUtils from "esri/core/reactiveUtils";
 
 export default declare([], {
 
     activate: function() {
         var mapID = this.basemapsModel.selectedId;
         this.localizeBasemap(mapID);
-        watch(this.basemapsModel, "selectedId", (event)=> {
-            this.localizeBasemap(event.value);
+        reactiveUtils.watch(
+            () => this.basemapsModel.selectedId,
+            (event)=> {
+                this.localizeBasemap(event.value);
         })
     },
     localizeBasemap(mapID){
