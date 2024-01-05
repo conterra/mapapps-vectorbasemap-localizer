@@ -20,48 +20,59 @@ export default declare([], {
 
     activate: function() {
         var mapID = this.basemapsModel.selectedId;
-        this.localizeBasemap(mapID);
+        this.localizeBasemaps(mapID);
         reactiveUtils.watch(
             () => this.basemapsModel.selectedId,
             (event)=> {
-                this.localizeBasemap(event.value);
+                this.localizeBasemaps(event.value);
         })
     },
-    localizeBasemap(mapID){
+    localizeIndividualBasemap(bLayer){
+        let locale = this._i18n.get().locale;
+        const supportedLocale = this._properties.supportedLocale;
+        const fallbackLocale = this._properties.fallbackLocale;
+        const localizableLayoutProperties = this._properties.localizableLayoutProperties;
+        if(supportedLocale.indexOf(locale) == -1)
+        {
+            //fallback locale
+            locale = fallbackLocale;
+        }
+        const waitAfterLayerviewCreateInMS = this._properties.waitAfterLayerviewCreateInMS;
+        bLayer.on("layerview-create", () => {
+            setTimeout(() => {
+                localizableLayoutProperties.forEach(localizationConfigItem => {
+                    const key = localizationConfigItem.key;
+                    const values = localizationConfigItem.values;
+                    const replacingValue =
+                        localizationConfigItem.replacingValue.replace("{locale}", locale);
+                    const localizableLayers = bLayer.currentStyleInfo.style.layers.
+                        filter(l => l.layout && l.layout[key] && values.indexOf(l.layout[key]) > -1);
+                    localizableLayers.forEach(layer => {
+                        const layoutProperties = bLayer.getLayoutProperties(layer.id);
+                        layoutProperties[key] = replacingValue;
+                        bLayer.setLayoutProperties(layer.id, layoutProperties);
+                    })
+                })
+            }, waitAfterLayerviewCreateInMS);
+        })
+    },
+    localizeBasemaps(mapID){
         const basemapItem = this.basemapsModel.findItemById(mapID);
         if (basemapItem) {
             const baseLayers = basemapItem?.basemap?.baseLayers?.items;
             if(baseLayers)
             {
-                let locale = this._i18n.get().locale;
-                const supportedLocale = this._properties.supportedLocale;
-                const fallbackLocale = this._properties.fallbackLocale;
-                const localizableLayoutProperties = this._properties.localizableLayoutProperties;
-                if(supportedLocale.indexOf(locale) == -1)
-                {
-                    //fallback locale
-                    locale = fallbackLocale;
-                }
-                const waitAfterLayerviewCreateInMS = this._properties.waitAfterLayerviewCreateInMS
                 baseLayers.forEach(bLayer => {
-                    if(bLayer.type == "vector-tile"){
-                        bLayer.on("layerview-create", () => {
-                            setTimeout(() => {
-                                localizableLayoutProperties.forEach(localizationConfigItem => {
-                                    const key = localizationConfigItem.key;
-                                    const values = localizationConfigItem.values;
-                                    const replacingValue =
-                                        localizationConfigItem.replacingValue.replace("{locale}", locale);
-                                    const localizableLayers = bLayer.currentStyleInfo.style.layers.
-                                        filter(l => l.layout && l.layout[key] && values.indexOf(l.layout[key]) > -1);
-                                    localizableLayers.forEach(layer => {
-                                        const layoutProperties = bLayer.getLayoutProperties(layer.id);
-                                        layoutProperties[key] = replacingValue;
-                                        bLayer.setLayoutProperties(layer.id, layoutProperties);
-                                    })
-                                })
-                            }, waitAfterLayerviewCreateInMS);
-                        })
+                    if(bLayer.type == "group"){
+                        const subLayers = bLayer.allLayers.items;
+                        subLayers.forEach(layer => {
+                            if(layer.type == "vector-tile" && layer.ctLocalizable){
+                                this.localizeIndividualBasemap(layer);
+                            }
+                        });
+                    }
+                    else if(bLayer.type == "vector-tile" && bLayer.ctLocalizable){
+                        this.localizeIndividualBasemap(bLayer);
                     }
                 })
             }
