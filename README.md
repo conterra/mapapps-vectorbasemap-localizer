@@ -1,3 +1,4 @@
+⚠️ This bundle is no longer in active development.
 # Vector Basemap Localizer
 
 This bundle changes the localization of vector tile layers to the currently selected locale.
