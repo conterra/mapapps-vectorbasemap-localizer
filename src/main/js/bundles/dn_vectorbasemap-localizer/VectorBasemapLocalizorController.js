@@ -25,7 +25,7 @@ export default declare([], {
             () => this.basemapsModel.selectedId,
             (event)=> {
                 this.localizeBasemap(event.value);
-        })
+            });
     },
     localizeBasemap(mapID){
         const basemapItem = this.basemapsModel.findItemById(mapID);
@@ -42,7 +42,7 @@ export default declare([], {
                     //fallback locale
                     locale = fallbackLocale;
                 }
-                const waitAfterLayerviewCreateInMS = this._properties.waitAfterLayerviewCreateInMS
+                const waitAfterLayerviewCreateInMS = this._properties.waitAfterLayerviewCreateInMS;
                 baseLayers.forEach(bLayer => {
                     if(bLayer.type == "vector-tile"){
                         bLayer.on("layerview-create", () => {
@@ -58,12 +58,12 @@ export default declare([], {
                                         const layoutProperties = bLayer.getLayoutProperties(layer.id);
                                         layoutProperties[key] = replacingValue;
                                         bLayer.setLayoutProperties(layer.id, layoutProperties);
-                                    })
-                                })
+                                    });
+                                });
                             }, waitAfterLayerviewCreateInMS);
-                        })
+                        });
                     }
-                })
+                });
             }
         }
     }
