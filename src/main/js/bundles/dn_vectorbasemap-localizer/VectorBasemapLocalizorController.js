@@ -18,33 +18,31 @@ import * as reactiveUtils from "esri/core/reactiveUtils";
 
 export default declare([], {
 
-    activate: function() {
+    activate: function () {
         var mapID = this.basemapsModel.selectedId;
         this.localizeBasemap(mapID);
         reactiveUtils.watch(
             () => this.basemapsModel.selectedId,
-            (event)=> {
+            (event) => {
                 this.localizeBasemap(event.value);
             });
     },
-    localizeBasemap(mapID){
+    localizeBasemap(mapID) {
         const basemapItem = this.basemapsModel.findItemById(mapID);
         if (basemapItem) {
             const baseLayers = basemapItem?.basemap?.baseLayers?.items;
-            if(baseLayers)
-            {
+            if (baseLayers) {
                 let locale = this._i18n.get().locale;
                 const supportedLocale = this._properties.supportedLocale;
                 const fallbackLocale = this._properties.fallbackLocale;
                 const localizableLayoutProperties = this._properties.localizableLayoutProperties;
-                if(supportedLocale.indexOf(locale) == -1)
-                {
+                if (supportedLocale.indexOf(locale) == -1) {
                     //fallback locale
                     locale = fallbackLocale;
                 }
                 const waitAfterLayerviewCreateInMS = this._properties.waitAfterLayerviewCreateInMS;
                 baseLayers.forEach(bLayer => {
-                    if(bLayer.type == "vector-tile"){
+                    if (bLayer.type == "vector-tile") {
                         bLayer.on("layerview-create", () => {
                             setTimeout(() => {
                                 localizableLayoutProperties.forEach(localizationConfigItem => {
@@ -52,8 +50,7 @@ export default declare([], {
                                     const values = localizationConfigItem.values;
                                     const replacingValue =
                                         localizationConfigItem.replacingValue.replace("{locale}", locale);
-                                    const localizableLayers = bLayer.currentStyleInfo.style.layers.
-                                        filter(l => l.layout && l.layout[key] && values.indexOf(l.layout[key]) > -1);
+                                    const localizableLayers = bLayer.currentStyleInfo.style.layers.filter(l => l.layout && l.layout[key] && values.indexOf(l.layout[key]) > -1);
                                     localizableLayers.forEach(layer => {
                                         const layoutProperties = bLayer.getLayoutProperties(layer.id);
                                         layoutProperties[key] = replacingValue;
